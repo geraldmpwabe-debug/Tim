@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="Family Photo Gallery - Mugooda Family">
+    <meta name="keywords" content="Mugooda Family, photos, gallery">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // --- Core Palette (UPDATED) ---
+                        'marine-blue': '#004D7A', // Deep Blue/Teal (Primary: Trust, Stability)
+                        'coral-accent': '#FF6B6B', // Vibrant Coral (Secondary: Action, Energy, Connection)
+                        
+                        // --- Backgrounds/Surfaces ---
+                        'light-sky-blue': '#87CEFA', // Soft, Off-White Page Background
+                        'dark-slate': '#2C3E50', // Dark Navy/Slate (Header/Footer)
+                        'card-photos': '#FFFFFF', // White
+                        'card-calendar': '#E6F3FF', // Light blue tint
+                        
+                        // --- Text Colors ---
+                        'light-text': '#FFFFFF',
+                        'medium-text': '#BDC3C7', // Light gray for inactive links
+                        'deep-text': '#1F2937', // Near-Black for general body text
+                    },
+                    fontFamily: {
+                         // Added a fallback for better aesthetics
+                        'sans': ['Inter', 'system-ui', 'sans-serif'], 
+
+                    },
+                },
+            }
+        }
+    </script>
+   
+<style>
+  .slider-container {
+    width: 100%;
+    max-width: 950px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    font-family: sans-serif;
+    margin: 20px auto;
+  }
+
+  .slider-window {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slides {
+    display: flex;
+    transition: transform 0.8s ease-in-out; /* Slightly slower slide animation */
+  }
+
+  .slides img {
+    width: 100%;
+    display: block;
+  }
+
+  .content {
+    padding: 20px;
+    text-align: center;
+    min-height: 120px; /* Ensures the card doesn't change size when text changes */
+  }
+
+  .caption {
+    color: #7d4433;
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  /* Styling for the sub-text */
+  .description {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 15px;
+  }
+
+  .dots-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border: 2px solid #7d4433;
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+    transition: background 0.3s;
+  }
+
+  .dot.active {
+    background: #7d4433;
+  }
+</style>
+</head>
+<body class="bg-light-sky-blue font-sans text-deep-text">
+    <nav class="bg-dark-slate shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-2xl font-bold text-light-text">MUGOODA FAMILY</h1>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
+                    <a href="Family-web.HTML" class="text-medium-text hover:text-light-text px-2 py-2 text-sm font-medium transition">Back to Main Site</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <section id="photos">
+                <h1 class="text-4xl font-extrabold text-marine-blue mb-8 border-b pb-4">📸 Family Photo Gallery</h1>
+                <p class="text-lg text-slate-600 mb-8">Browse and upload photos from our family members. Share your memories!</p>
+
+                <div class="grid lg:grid-cols-4 gap-8 mb-10">
+                    <div class="lg:col-span-1 bg-card-photos p-6 rounded-xl shadow-2xl border-t-4 border-marine-blue">
+                        <h2 class="text-2xl font-bold text-marine-blue mb-4">Upload a Photo</h2>
+                        <form onsubmit="event.preventDefault(); handleGalleryUpload(this)">
+                            <div class="mb-4">
+                                <label for="gallery-image-upload" class="block text-sm font-medium text-slate-700 mb-1">Select Image</label>
+                                <input type="file" id="gallery-image-upload" accept="image/*" required class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-marine-blue/20 file:text-marine-blue hover:file:bg-marine-blue/30 transition">
+                            </div>
+                            <div class="mb-4">
+                                <label for="gallery-caption" class="block text-sm font-medium text-slate-700 mb-1">Caption (Optional)</label>
+                                <input type="text" id="gallery-caption" placeholder="Describe the photo..." class="w-full p-2 border border-gray-300 rounded-lg focus:ring-marine-blue focus:border-marine-blue">
+                            </div>
+                            <button type="submit" class="w-full px-4 py-2 bg-marine-blue text-white font-semibold rounded-lg hover:bg-marine-blue/90 transition">
+                                Upload to Gallery
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="lg:col-span-3">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4">Recent Photos</h2>
+                        <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Photos will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <div id="lightbox-modal" class="fixed inset-0 bg-black bg-opacity-90 hidden items-center justify-center z-[60] transition-opacity duration-300" onclick="closeLightbox()">
+        <div class="relative max-w-full max-h-full p-4" onclick="event.stopPropagation()">
+            <img id="lightbox-image" src="" alt="Full size photo" class="max-w-full max-h-[90vh] object-contain transition-transform duration-300">
+            
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white text-4xl font-light hover:text-coral-accent transition z-10 p-2 leading-none">
+                &times; 
+            </button>
+            
+            <button id="prev-image-btn" onclick="showPreviousImage(event)" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white p-3 bg-black/50 rounded-full hover:bg-black/80 transition disabled:opacity-30 disabled:cursor-not-allowed z-20">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+
+            <button id="next-image-btn" onclick="showNextImage(event)" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white p-3 bg-black/50 rounded-full hover:bg-black/80 transition disabled:opacity-30 disabled:cursor-not-allowed z-20">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4 bg-black bg-opacity-50 text-white flex justify-between items-center z-10">
+                <p id="lightbox-uploader" class="text-sm italic"></p>
+                <div class="flex space-x-3 relative">
+                    <button id="save-image-btn" onclick="saveImage()" class="px-3 py-1 bg-marine-blue text-white font-semibold rounded-full text-sm hover:bg-marine-blue/90 transition flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Save
+                    </button>
+
+                    <div class="relative">
+                        <button id="more-actions-btn" onclick="toggleMoreActions(event)" class="px-3 py-1 bg-black/20 text-white font-semibold rounded-full text-sm hover:bg-black/30 transition flex items-center">⋯</button>
+
+                        <div id="more-actions-menu" style="display:none; position: absolute; right:0; bottom:44px; background: rgba(0,0,0,0.85); padding:8px; border-radius:8px; min-width:140px; flex-direction:column; gap:6px; z-index:30;">
+                            <button id="delete-image-btn" onclick="deleteImage()" class="w-full text-left px-3 py-1 bg-red-600 text-white font-semibold rounded-full text-sm hover:bg-red-700 transition flex items-center" style="display:none;">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-card-photos p-8 rounded-xl shadow-2xl max-w-sm w-full text-center transform transition-all duration-300 scale-95 opacity-0 border border-marine-blue/30" id="modal-content">
+            <h3 id="modal-title" class="text-2xl font-bold text-marine-blue mb-4"></h3>
+            <p id="modal-message" class="text-slate-700 mb-6"></p>
+            <button onclick="closeMessageModal()" class="px-6 py-2 bg-marine-blue text-white font-semibold rounded-full hover:bg-marine-blue/90 transition">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <footer class="bg-dark-slate mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-medium-text">
+            <p>&copy; <span id="current-year">2025</span> MUGOODA FAMILY.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Global arrays to simulate storing data
+        let galleryImages = [
+            {
+                id: 'G_001',
+                url: 'https://via.placeholder.com/400x300.png?text=Family+Photo+1',
+                caption: 'Family gathering at the park',
+                uploader: 'Gerald',
+                date: '2025-01-01'
+            },
+            {
+                id: 'G_002',
+                url: 'https://via.placeholder.com/400x300.png?text=Family+Photo+2',
+                caption: 'Birthday celebration',
+                uploader: 'Mugooda Admin',
+                date: '2025-01-05'
+            }
+        ]; // For the photo gallery
+        
+        /**
+         * Loads gallery images from localStorage.
+         */
+        function loadGalleryImagesFromStorage() {
+            const stored = localStorage.getItem('galleryImages');
+            if (stored) {
+                try {
+                    galleryImages = JSON.parse(stored);
+                } catch (e) {
+                    console.error('Error loading gallery images:', e);
+                    // Keep default images if parsing fails
+                }
+            }
+        }
+        
+        /**
+         * Saves gallery images to localStorage.
+         */
+        function saveGalleryImagesToStorage() {
+            try {
+                localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
+            } catch (e) {
+                console.error('Error saving gallery images:', e);
+                if (e.name === 'QuotaExceededError') {
+                    showMessageModal('Storage Full', 'Gallery storage is full. Please delete some older photos to add new ones.');
+                }
+            }
+        }
+        
+        
+        // --- New Global Variables for Simulation ---
+        const currentUser = 'Gerald'; // Simulating the currently logged-in user
+        
+        // DOM element references
+        const messageModal = document.getElementById('message-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+
+        // New DOM references for the Lightbox
+        const lightboxModal = document.getElementById('lightbox-modal');
+        const lightboxImage = document.getElementById('lightbox-image');
+        
+        // Track current lightbox image
+        let currentLightboxImageIndex = -1;
+        
+        // New Lightbox Action DOM references
+        const saveImageBtn = document.getElementById('save-image-btn');
+        const deleteImageBtn = document.getElementById('delete-image-btn');
+        const lightboxUploader = document.getElementById('lightbox-uploader');
+        const prevImageBtn = document.getElementById('prev-image-btn'); 
+        const nextImageBtn = document.getElementById('next-image-btn'); 
+        const moreActionsBtn = document.getElementById('more-actions-btn');
+        const moreActionsMenu = document.getElementById('more-actions-menu');
+        
+        // --- START Gallery Functions ---
+
+        /**
+         * Handles gallery image upload (simulated).
+         */
+        function handleGalleryUpload(form) {
+            const fileInput = form.elements['gallery-image-upload'];
+            const caption = form.elements['gallery-caption'].value || 'No caption';
+
+            if (!fileInput.files[0]) {
+                showMessageModal('Error', 'Please select an image to upload.');
+                return;
+            }
+
+            // Simulate upload by creating a data URL or using a placeholder
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result; // Data URL for simulation
+                const newImage = {
+                    id: 'G_' + (galleryImages.length + 1).toString().padStart(3, '0'),
+                    url: imageUrl,
+                    caption: caption,
+                    uploader: currentUser,
+                    date: new Date().toLocaleDateString()
+                };
+                galleryImages.unshift(newImage); // Add to start
+                saveGalleryImagesToStorage(); // Save to localStorage
+                form.reset();
+                showMessageModal('Upload Successful', `Your photo has been added to the gallery and saved permanently!`);
+                renderGallery();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /**
+         * Renders the photo gallery.
+         */
+        function renderGallery() {
+            const container = document.getElementById('gallery-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (galleryImages.length === 0) {
+                container.innerHTML = `
+                    <div class="md:col-span-3 p-8 bg-marine-blue/5 rounded-xl shadow-inner border-2 border-dashed border-marine-blue/30 text-marine-blue/80 text-center">
+                        <p class="text-xl">No photos uploaded yet.</p>
+                        <p class="text-sm mt-2">Be the first to share a family memory!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            galleryImages.forEach(image => {
+                container.innerHTML += `
+                    <div class="bg-card-photos rounded-lg shadow-xl overflow-hidden border-t-4 border-marine-blue cursor-pointer group" onclick="openGalleryLightbox('${image.id}')">
+                        <img src="${image.url}" alt="${image.caption}" class="w-full h-48 object-cover transition duration-300 group-hover:scale-105 group-hover:opacity-80">
+                        <div class="p-4">
+                            <p class="text-sm font-semibold text-marine-blue">${image.caption}</p>
+                            <p class="text-xs text-slate-500 mt-1">By ${image.uploader} on ${image.date}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        /**
+         * Opens the lightbox for gallery images.
+         */
+        function openGalleryLightbox(imageId) {
+            const image = galleryImages.find(img => img.id === imageId);
+            if (!image) return;
+
+            // Find and store the index of the current image
+            currentLightboxImageIndex = galleryImages.findIndex(img => img.id === imageId);
+
+            // Reuse the existing lightbox modal
+            lightboxImage.src = image.url;
+            lightboxUploader.textContent = `Uploaded by ${image.uploader} on ${image.date}`;
+
+            // Hide save button; show delete button inside menu only when the current user uploaded the image
+            saveImageBtn.style.display = 'none';
+            // Ensure menu is closed initially
+            if (moreActionsMenu) moreActionsMenu.style.display = 'none';
+
+            if (currentUser === image.uploader) {
+                deleteImageBtn.style.display = 'flex';
+            } else {
+                deleteImageBtn.style.display = 'none';
+            }
+
+            lightboxModal.classList.remove('hidden');
+            lightboxModal.classList.add('flex');
+        }
+
+        // --- END Gallery Functions ---
+
+        /**
+         * Shows the generic message modal.
+         */
+        function showMessageModal(title, message) {
+            modalTitle.innerHTML = title;
+            modalMessage.innerHTML = message;
+            messageModal.classList.remove('hidden');
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+            messageModal.classList.add('flex', 'opacity-100');
+        }
+
+        /**
+         * Closes the generic message modal.
+         */
+        function closeMessageModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                messageModal.classList.remove('flex', 'opacity-100');
+                messageModal.classList.add('hidden');
+            }, 300);
+        }
+
+        /**
+         * Closes the lightbox modal.
+         */
+        function closeLightbox() {
+            lightboxModal.classList.remove('flex');
+            lightboxModal.classList.add('hidden');
+        }
+
+        // Placeholder functions for lightbox navigation (not implemented)
+        function showPreviousImage(event) {
+            event.stopPropagation();
+            if (currentLightboxImageIndex > 0) {
+                currentLightboxImageIndex--;
+                const image = galleryImages[currentLightboxImageIndex];
+                lightboxImage.src = image.url;
+                lightboxUploader.textContent = `Uploaded by ${image.uploader} on ${image.date}`;
+            }
+        }
+
+        function showNextImage(event) {
+            event.stopPropagation();
+            if (currentLightboxImageIndex < galleryImages.length - 1) {
+                currentLightboxImageIndex++;
+                const image = galleryImages[currentLightboxImageIndex];
+                lightboxImage.src = image.url;
+                lightboxUploader.textContent = `Uploaded by ${image.uploader} on ${image.date}`;
+            }
+        }
+
+        function saveImage() {
+            // Placeholder
+        }
+
+        function deleteImage() {
+            // Confirm deletion
+            if (!confirm('Delete this photo from the gallery? This cannot be undone.')) return;
+
+            if (currentLightboxImageIndex < 0 || currentLightboxImageIndex >= galleryImages.length) {
+                showMessageModal('Error', 'Unable to determine which image to delete.');
+                return;
+            }
+
+            // Remove the image from the array and persist
+            galleryImages.splice(currentLightboxImageIndex, 1);
+            saveGalleryImagesToStorage();
+
+            // Close lightbox and re-render the gallery
+            closeLightbox();
+            renderGallery();
+
+            showMessageModal('Deleted', 'The photo has been removed from the gallery.');
+        }
+
+        // Toggle the more-actions menu (three dots)
+        function toggleMoreActions(event) {
+            event.stopPropagation();
+            if (!moreActionsMenu) return;
+            moreActionsMenu.style.display = (moreActionsMenu.style.display === 'flex' ? 'none' : 'flex');
+        }
+
+        // Close more-actions menu when clicking elsewhere inside the lightbox
+        document.addEventListener('click', (e) => {
+            if (moreActionsMenu && moreActionsMenu.style.display === 'flex') {
+                // If click happened inside the menu or the button, ignore
+                const target = e.target;
+                if (moreActionsMenu.contains(target) || (moreActionsBtn && moreActionsBtn.contains(target))) return;
+                moreActionsMenu.style.display = 'none';
+            }
+        });
+
+        /**
+         * Runs when the page loads.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGalleryImagesFromStorage(); // Load gallery images from localStorage
+            // Set the current year in the footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Render gallery on load
+            renderGallery();
+        });
+    </script>
+</body>
+</html>

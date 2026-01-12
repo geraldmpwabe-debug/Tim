@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edutech Club Flyer</title>
+    <style>
+        :root {
+            --primary-blue: #3fa9f5;
+            --dark-blue: #1a1e4d;
+            --white: #ffffff;
+            --bg-overlay: rgba(26, 30, 77, 0.7);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .flyer-container {
+            width: 800px;
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
+                        url('group.jpg') no-repeat center center;
+            background-size: cover;
+            color: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-bottom: 30px;
+        }
+
+        /* Top Logo Section */
+        .header-logo {
+            background-color: #f8f9fa;
+            padding: 15px 40px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            color: var(--dark-blue);
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 60px 40px;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        p.description {
+            font-size: 18px;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .btn-signup {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .contact-info {
+            background-color: var(--dark-blue);
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-align: left;
+            font-size: 14px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: white;
+            width: 80%;
+            border-radius: 20px;
+            padding: 15px;
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        .footer-label {
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .partner-logos {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .partner-logos img {
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="flyer-container">
+    <div class="header-logo">
+        Edutech.club
+    </div>
+
+    <div class="content">
+        <h1>Bridge the gap between learning and employment with our community-first platform.</h1>
+        <p class="description">
+            Connect with like-minded individuals, Learn from peers, Innovate ideas <br>
+            and receive mentorship from experts to actualize them.
+        </p>
+    </div>
+
+    <div class="cta-section">
+        <a href="#" class="btn-signup">Sign Up Today!</a>
+        <div class="contact-info">
+            <strong>Call/WhatsApp:</strong> +256 708 685472<br>
+            <strong>Socials:</strong> linktr.ee/edutechmeetup<br>
+            <strong>Website:</strong> www.edutechmeetup.org
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-label">POWERED BY</div>
+        <div class="partner-logos">
+            <span>Ministry of ICT & National Guidance</span>
+            <span style="border-left: 1px solid #ccc; height: 30px;"></span>
+            <span>National ICT Innovation Hub</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
